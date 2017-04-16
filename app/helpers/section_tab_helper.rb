@@ -30,7 +30,7 @@ module SectionTabHelper
       current_module = current_page.context_module_tags.find_by(context_id: context.id).context_module
       current_module_pages = context.wiki_pages.joins(:context_module_tags).where("content_tags.context_module_id = #{current_module.id}").order(created_at: :asc)
       current_module_pages.each do |page|
-        concat("<li class='sub-section'><a href='/courses/#{context.id}/pages/#{page.url}' title=#{page.title} class='pages'>#{page.title}</a></li>".html_safe)
+        concat("<li class='sub-section'><a href='/courses/#{context.id}/pages/#{page.url}' title=#{page.title} class='pages #{page.url==params[:id] ? "active" : ""}'>#{page.title}</a></li>".html_safe)
       end
     end
   end
