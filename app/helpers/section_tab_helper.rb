@@ -24,7 +24,15 @@ module SectionTabHelper
   end
 
   def section_tab_tag(tab, context, active_tab)
-    concat(SectionTabTag.new(tab, context, active_tab).to_html)
+      concat(SectionTabTag.new(tab, context, active_tab).to_html)
+      current_page = WikiPage.find_by(url: params[:id])
+      if tab[:label]=="Pages" && current_page
+      current_module = current_page.context_module_tags.find_by(context_id: context.id).context_module
+      current_module_pages = context.wiki_pages.joins(:context_module_tags).where("content_tags.context_module_id = #{current_module.id}").order(created_at: :asc)
+      current_module_pages.each do |page|
+        concat("<li class='sub-section'><a href='/courses/#{context.id}/pages/#{page.url}' title=#{page.title} class='pages'>#{page.title}</a></li>".html_safe)
+      end
+    end
   end
 
   class AvailableSectionTabs
